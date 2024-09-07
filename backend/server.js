@@ -1,11 +1,12 @@
 import express from "express"
 import dotenv from "dotenv"
+import cors from "cors"
 import colors from "colors"
 import errorHandler from "./middlewares/errorHandler.js"
-import cors from "cors"
 
 import authRouter from "./routes/auth.route.js"
 import productsRouter from "./routes/products.route.js"
+import cartRouter from "./routes/cart.route.js"
 
 import connectDB from "./db/connectDB.js"
 import cookieParser from "cookie-parser"
@@ -25,6 +26,7 @@ app.use(cookieParser()) // to parse and could access our req cookies
 
 app.use("/api/auth" , authRouter)
 app.use("/api/products" , productsRouter)
+app.use("/api/cart" , cartRouter)
  
 
 
