@@ -12,6 +12,8 @@ authRouter.post("/logout" , logout)
 
 authRouter.post("/generate-access-token" , generateAccessToken)
 
+// authRouter.post("/profile" , getProfile)
+
 
 
 export default authRouter
