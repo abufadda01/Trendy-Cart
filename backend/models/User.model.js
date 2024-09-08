@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
         required : [true , "password is required"] ,
         minLength : [6 , "password must be at least 6 characters"]
     },
-    cartItems : [
+    cartItems : [ // every time i push a new item in the cart a new object been created and the qunatity key will created by default with 1 value and the product key will be the id to the product itself
         {
             quantity : {type : Number , default : 1} ,
             product : {type : mongoose.Schema.Types.ObjectId , ref : "products"}
