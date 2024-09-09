@@ -43,7 +43,7 @@ const validateCoupon = async(req , res , next) => {
             return next(createError("Coupon expired" , 400))
         }
 
-        res.status(200).json(coupon)
+        res.status(200).json(coupon) 
 
     } catch (error) {
         next(error)
