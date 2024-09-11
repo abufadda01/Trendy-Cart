@@ -172,7 +172,18 @@ const logout = async (req, res, next) => {
 
 
 
-    export {register , login , logout , generateAccessToken}
+  const getProfile = async (req , res , next) => {
+    try {
+        res.status(200).json(req.user)
+    } catch (error) {
+        next(error)
+    }
+  }
+
+
+
+
+  export {register , login , logout , generateAccessToken , getProfile}
 
 
 

@@ -9,6 +9,7 @@ import productsRouter from "./routes/products.route.js"
 import cartRouter from "./routes/cart.route.js"
 import couponRouter from "./routes/coupon.route.js"
 import paymentRouter from "./routes/payment.route.js"
+import analyticsRouter from "./routes/analytics.route.js"
 
 import connectDB from "./db/connectDB.js"
 import cookieParser from "cookie-parser"
@@ -31,6 +32,7 @@ app.use("/api/products" , productsRouter)
 app.use("/api/cart" , cartRouter)
 app.use("/api/coupons" , couponRouter)
 app.use("/api/payment" , paymentRouter)
+app.use("/api/analytics" , analyticsRouter)
  
 
 

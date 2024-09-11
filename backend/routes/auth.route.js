@@ -1,5 +1,6 @@
 import express from "express"
-import { register , login , logout , generateAccessToken } from "../controllers/auth.controller.js"
+import { register , login , logout , generateAccessToken, getProfile } from "../controllers/auth.controller.js"
+import { protectRoute } from "../middlewares/auth.js"
 
 const authRouter = express.Router()
 
@@ -12,7 +13,7 @@ authRouter.post("/logout" , logout)
 
 authRouter.post("/generate-access-token" , generateAccessToken)
 
-// authRouter.post("/profile" , getProfile)
+authRouter.post("/profile" , protectRoute , getProfile)
 
 
 

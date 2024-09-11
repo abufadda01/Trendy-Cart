@@ -58,7 +58,7 @@ const createCheckoutSession = async (req , res , next) => {
             success_url : `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url : `${process.env.CLIENT_URL}/purchase-cancel`,
             discounts : coupon ? [{coupon : await createStripeCoupon(coupon.discountPercentege)}] : [] ,
-            metadata : {
+            metadata : { // Metadata: The session stores metadata such as userId, couponCode, and the serialized products list, which will be used later in the order creation process.
                 userId : req.user._id.toString() , 
                 couponCode : couponCode || "" ,
                 products : JSON.stringify(
@@ -90,6 +90,7 @@ const createCheckoutSession = async (req , res , next) => {
 
 
 
+
 const checkOrderSuccess = async (req , res , next) => {
 
     try {
@@ -97,6 +98,7 @@ const checkOrderSuccess = async (req , res , next) => {
         const {sessionId} = req.body
         const session = await stripe.checkout.sessions.retrieve(sessionId)
 
+        // the keys inside the metadata will be set when we create our session id when create new order
         if(session.payment_status === "paid"){
 
             if(session.metadata.couponCode){
@@ -116,11 +118,20 @@ const checkOrderSuccess = async (req , res , next) => {
                 stripeSessionId : session.id
             })
 
+            await newOrder.save()
+
+            res.status(200).json({
+                message : "Paymeny successful , order created " ,
+                orderId : newOrder._id
+            })
+
+        }else {
+            return next(createError("Payment not completed or failed" , 400))
         }
 
 
     } catch (error) {
-        
+        next(error)
     }
 
 }

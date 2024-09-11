@@ -1,7 +1,7 @@
 import { redis } from "../db/redis.js"
 import Product from "../models/Product.model.js"
 import createError from "../utils/createError.js"
-import cloudinary from "../utils/cloudinary.js"
+import cloudinary from "../db/cloudinary.js"
 
 
 
