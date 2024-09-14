@@ -1,14 +1,33 @@
-import React from 'react'
-import {BrowserRouter as Router , Routes , Route} from "react-router-dom"
+import React, { useEffect } from 'react'
+import {BrowserRouter as Router , Routes , Route, Navigate} from "react-router-dom"
+import { Toaster } from 'react-hot-toast'
+import { useUserStore } from './store/useUserStore'
+
 import HomePage from './pages/HomePage'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import AdminPage from './pages/AdminPage'
+import CategoryPage from './pages/CategoryPage'
+
 import Navbar from './components/Navbar'
+import LoadingSpinner from './components/LoadingSpinner'
 
 
 
 const App = () => {
+
+  const {user , checkAuth , checkingAuth} = useUserStore()
+
+  useEffect(() => {
+    checkAuth() // to keep checking if the user is logged in when refresh the page , and we add it inside useEffect in the App component because its the first thing that being rendered  
+  } , [checkAuth])
+
+
+  if(checkingAuth) return <LoadingSpinner/>
+
+
   return (
+
     <div className='min-h-screen bg-gray-900 overflow-hidden text-white relative'>
 
       <div className='absolute inset-0 overflow-hidden'>
@@ -19,18 +38,27 @@ const App = () => {
 
       <div className='relative z-50 pt-20'>
 
-        <Navbar/>
-
         <Router>
-          <Route path='/' element={<HomePage/>}/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/register' element={<Register/>}/>
+
+          <Navbar/>
+
+            <Routes>
+              <Route path='/' element={user ? <HomePage/> : <Navigate to="/login"/>}/>
+              <Route path='/register' element={user ? <Navigate to="/"/> : <Register/>}/>
+              <Route path='/login' element={user ? <Navigate to="/"/> : <Login/>}/>
+              <Route path='/admin-dashboard' element={user?.role === "admin" ? <AdminPage/> : <Navigate to="/login"/>}/>
+              <Route path='/category/:category' element={user ? <CategoryPage/> : <Navigate to="/login"/>}/>
+            </Routes>
+
+            <Toaster/>
+
         </Router>
 
-      </div>
+      </div> 
 
     </div>
   )
 }
+
 
 export default App 
