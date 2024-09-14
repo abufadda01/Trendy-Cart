@@ -12,7 +12,11 @@ const ProductCard = ({ product }) => {
 		if(!user){
 			return toast.error("please log in to add products to the cart")
 		}
+
+		// handle the logic of adding to cart
+		
     }
+
 
 	return (
 		<div className='flex w-full relative flex-col overflow-hidden rounded-lg border border-gray-700 shadow-lg'>
