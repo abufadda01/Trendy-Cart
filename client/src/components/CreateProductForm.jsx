@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useProductStore } from '../store/useProductStore'
 
 
-const categories = ["jeans" , "t-shirt" , "shoes" , "glasses" , "jacket" , "suit" , "bag"]
+const categories = ["jeans" , "tshirts" , "shoes" , "glasses" , "jacket" , "suit" , "bag"]
 
 
 const CreateProductForm = () => {

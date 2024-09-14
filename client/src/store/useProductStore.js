@@ -83,6 +83,22 @@ export const useProductStore = create((set , get) => ({
 
 
 
+    getProductsByCategory : async (category) => {
+
+        set({ loading: true });
+
+        try {
+            const response = await axiosObj.get(`/products/category/${category}`);
+            set({products : response.data.products , loading : false})
+
+        } catch (error) {
+            set({ loading: false });
+            toast.error(error?.response?.data?.msg);
+        }
+    } 
+
+
+
 
 }));
 
