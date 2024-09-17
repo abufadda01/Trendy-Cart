@@ -3,6 +3,7 @@ import { axiosObj } from "../utils/axios"
 import {toast} from "react-hot-toast"
 
 
+// we do same logic in the state in each function as the backend controllers do , to keep them synced togther , in crud operations specially
 
 export const useCartStore = create((set , get) => ({
 
@@ -11,6 +12,7 @@ export const useCartStore = create((set , get) => ({
     total : 0 , // total will be the subTotal value with any discount value
     subTotal : 0 ,
     loading : 0 ,
+    isCouponApplied : false ,
 
 
     getCartItems : async () => {
@@ -72,8 +74,36 @@ export const useCartStore = create((set , get) => ({
             set({loading : false})
             toast.error(error?.response?.data?.msg)
         }
-    }
+    },
 
+
+
+    removeAllProductItems : async (productId) => {
+        set({loading : true})
+        try {
+            await axiosObj.delete('/cart' , {productId})
+            set((prevState) => ({cart : prevState.cart.filter(cartItem => cartItem._id !== productId) , loading : false}))
+            get().calculateTotals()
+        } catch (error) {
+            set({loading : false})
+            toast.error(error?.response?.data?.msg)
+        }
+    },
+ 
+
+
+    updateProductQuantity : async (productId , newQuantity) => {
+        set({loading : true})
+        try {
+            if(newQuantity === 0) return get().removeAllProductItems(productId) 
+            await axiosObj.put(`/cart/${productId}` , {newQuantity})
+            set((prevState) => ({cart : prevState.cart.map((cartItem) => cartItem._id === productId ? {...cartItem , quantity : newQuantity} : cartItem)}))
+            get().calculateTotals()
+        } catch (error) {
+            set({loading : false}) 
+            toast.error(error?.response?.data?.msg)
+        }
+    }
 
 
 }))
