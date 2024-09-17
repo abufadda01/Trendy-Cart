@@ -40,7 +40,7 @@ const addToCart = async (req , res , next) => {
         const {productId} = req.body
         const user = req.user
 
-        const isProductExistInCart = user.cartItems.find(cartItem => cartItem._id === productId)
+        const isProductExistInCart = user.cartItems.find(cartItem => cartItem._id.toString() === productId.toString())
 
         // if the product already exist in user cart we just increase the quantity by one , else the product is not in the user cartItems so we add it (push it)
         if(isProductExistInCart){

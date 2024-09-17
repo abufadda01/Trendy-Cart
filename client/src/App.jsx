@@ -22,7 +22,7 @@ const App = () => {
     checkAuth() // to keep checking if the user is logged in when refresh the page , and we add it inside useEffect in the App component because its the first thing that being rendered  
   } , [checkAuth])
 
-
+ 
   if(checkingAuth) return <LoadingSpinner/>
 
 
