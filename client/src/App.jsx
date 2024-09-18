@@ -13,6 +13,8 @@ import Navbar from './components/Navbar'
 import LoadingSpinner from './components/LoadingSpinner'
 import CartPage from './pages/CartPage'
 import { useCartStore } from './store/useCartStore'
+import PurchaseSuccessPage from './pages/PurchaseSuccessPage'
+import PurchaseCancelPage from './pages/PurchaseCancelPage'
 
 
 
@@ -60,6 +62,8 @@ const App = () => {
               <Route path='/admin-dashboard' element={user?.role === "admin" ? <AdminPage/> : <Navigate to="/login"/>}/>
               <Route path='/category/:category' element={user ? <CategoryPage/> : <Navigate to="/login"/>}/>
               <Route path='/cart' element={user ? <CartPage/> : <Navigate to="/login"/>}/>
+              <Route path='/purchase-success' element={user ? <PurchaseSuccessPage/> : <Navigate to="/login"/>}/>
+              <Route path='/purchase-cancel' element={user ? <PurchaseCancelPage/> : <Navigate to="/login"/>}/>
             </Routes>
 
             <Toaster/>

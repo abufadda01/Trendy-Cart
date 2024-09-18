@@ -103,6 +103,12 @@ export const useCartStore = create((set , get) => ({
             set({loading : false}) 
             toast.error(error?.response?.data?.msg)
         }
+    },
+
+
+
+    clearCart : () => {
+        set({cart : [] , subTotal : 0 , total : 0 , coupon : null})
     }
 
 
