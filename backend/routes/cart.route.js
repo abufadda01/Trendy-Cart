@@ -1,6 +1,6 @@
 import express from "express"
 import { protectRoute } from "../middlewares/auth.js"
-import { addToCart, getCartProducts, removeAllProductItems, updateCartProductQuantity } from "../controllers/cart.controller.js"
+import { addToCart, clearCart, getCartProducts, removeAllProductItems, updateCartProductQuantity } from "../controllers/cart.controller.js"
 
 
 const cartRouter = express.Router()
@@ -13,6 +13,8 @@ cartRouter.post("/" , protectRoute , addToCart)
 cartRouter.delete("/" , protectRoute , removeAllProductItems)
 
 cartRouter.put("/:productId" , protectRoute , updateCartProductQuantity)
+
+cartRouter.patch("/clear-cart" , protectRoute , clearCart)
 
 
 

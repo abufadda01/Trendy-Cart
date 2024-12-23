@@ -66,7 +66,7 @@ const PurchaseSuccessPage = () => {
         gravity={0.1}
         style={{ zIndex: 100 }}
         numberOfPieces={3000}
-        recycle={false}
+        recycle={true}
     />
 
     <div className='max-w-md w-full bg-gray-800 rounded-lg shadow-xl overflow-hidden relative z-10'>

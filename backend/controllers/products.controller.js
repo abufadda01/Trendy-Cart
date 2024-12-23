@@ -114,7 +114,6 @@ const deleteProduct = async (req , res , next) => {
             
             try {
                 await cloudinary.uploader.destroy(`products/${imageId}`)
-                console.log('product image deleted successfully')            
             } catch (error) {
                 next(error)
             }

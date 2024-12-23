@@ -55,7 +55,7 @@ const App = () => {
 
           <Navbar/>
 
-            <Routes>
+            <Routes>    
               <Route path='/' element={user ? <HomePage/> : <Navigate to="/login"/>}/>
               <Route path='/register' element={user ? <Navigate to="/"/> : <Register/>}/>
               <Route path='/login' element={user ? <Navigate to="/"/> : <Login/>}/>

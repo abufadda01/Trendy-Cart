@@ -6,6 +6,9 @@ export const createNewCoupon = async (userId) => {
 
     try {
 
+        // to delete all user previous discounts code because each user could have single coupon at same time
+        await Coupon.findOneAndDelete({userId})
+
         const newCoupon = new Coupon({
             userId,
             code : "GIFT" + Math.random().toString(36).substring(2 , 8).toUpperCase() ,

@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 const stripePromise = loadStripe("pk_test_51PciGD2Mx72CRPdUlTmj8XNb1XbSRi6O0UPuMsvBVyPHrPXvSrI1GS063jlwKfCQO5704rwKN0EZOei4Qy1q2eop00DSSV1RqA")
 
 
+
 const OrderSummary = () => {
 
 	const { total, subTotal, coupon, cart , isCouponApplied } = useCartStore();
@@ -75,7 +76,7 @@ const OrderSummary = () => {
 					{coupon && isCouponApplied && (
 						<dl className='flex items-center justify-between gap-4'>
 							<dt className='text-base font-normal text-gray-300'>Coupon ({coupon.code})</dt>
-							<dd className='text-base font-medium text-emerald-400'>-{coupon.discountPercentage}%</dd>
+							<dd className='text-base font-medium text-emerald-400'>-{coupon.discountPercentege	}%</dd>
 						</dl>
 					)}
 

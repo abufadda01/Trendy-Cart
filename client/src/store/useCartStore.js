@@ -51,11 +51,13 @@ export const useCartStore = create((set , get) => ({
             set({loading : false})
             toast.error(error?.response?.data?.msg)
         }
+        
     },
 
 
 
     calculateTotals : async () => {
+        
         set({loading : true})
 
         try {
@@ -109,6 +111,37 @@ export const useCartStore = create((set , get) => ({
 
     clearCart : () => {
         set({cart : [] , subTotal : 0 , total : 0 , coupon : null})
+    },
+
+
+
+    getMyCoupon : async () => {
+        try {
+            const response = await axiosObj.get(`/coupons`)
+            set({coupon : response.data})
+            console.log(response.data)
+        } catch (error) {
+            toast.error(error?.response?.data?.msg)
+        }
+    },
+
+
+    applyCoupon : async (code) => {
+        try {
+            const response = await axiosObj.post(`/coupons/validate` , {code})
+            set({coupon : response.data , isCouponApplied : true})
+            get().calculateTotals()
+            toast.success("coupon applied successfully")
+        } catch (error) {
+            toast.error(error?.response?.data?.msg)
+        }
+    },
+
+
+    removeCoupon : () => {
+        set({coupon : null , isCouponApplied : false})
+        get().calculateTotals()
+        toast.success("coupon removed")
     }
 
 

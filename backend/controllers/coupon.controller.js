@@ -29,7 +29,8 @@ const validateCoupon = async(req , res , next) => {
 
     try {
         
-        const {code} = req.body
+        const {code} = req.body 
+        console.log(code)
 
         const coupon = await Coupon.findOne({code , userId : req.user._id , isActive : true})
 

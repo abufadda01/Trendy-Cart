@@ -24,7 +24,7 @@ app.use(express.json({limit : "10mb"}))
 app.use(cors({credentials : true}))
 app.use(express.urlencoded({extended : true}))
 app.use(cookieParser()) // to parse and could access our req cookies
-
+ 
 
 
 app.use("/api/auth" , authRouter)

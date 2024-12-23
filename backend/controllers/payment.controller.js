@@ -35,7 +35,7 @@ const createCheckoutSession = async (req , res , next) => {
                     },
                     unit_amount : productPrice
                 },
-                quantity: productQuantity 
+                quantity: productQuantity || 1
             }
 
         })
@@ -46,19 +46,20 @@ const createCheckoutSession = async (req , res , next) => {
             coupon = await Coupon.findOne({code : couponCode , userId : req.user._id , isActive : true})
 
             if(coupon){
-                totalAmount -= Math.round(totalAmount * coupon.discountPercentege / 100) // apply the coupon discount lets say the totalAmount is 100 and the coupon discount is 20 the formula will be like (100 * 20/100) so the discount will be 20 then minuse the 20 from out totalAmount then it will become 80
+                totalAmount -= Math.round((totalAmount * coupon.discountPercentege) / 100) // apply the coupon discount lets say the totalAmount is 100 and the coupon discount is 20 the formula will be like (100 * 20/100) so the discount will be 20 then minuse the 20 from out totalAmount then it will become 80
             }
 
         }
 
         const session = await stripe.checkout.sessions.create({
-            payment_method_types : ["card" , "paypal"],
+            payment_method_types : ["card"],
             line_items : lineItems,
             mode : "payment" ,
             success_url : `${process.env.CLIENT_URL}/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url : `${process.env.CLIENT_URL}/purchase-cancel`,
             discounts : coupon ? [{coupon : await createStripeCoupon(coupon.discountPercentege)}] : [] ,
-            metadata : { // Metadata: The session stores metadata such as userId, couponCode, and the serialized products list, which will be used later in the order creation process.
+            // Metadata: The session stores metadata such as userId, couponCode, and the serialized products list, which will be used later in the order creation process.
+            metadata : { 
                 userId : req.user._id.toString() , 
                 couponCode : couponCode || "" ,
                 products : JSON.stringify(
@@ -78,7 +79,7 @@ const createCheckoutSession = async (req , res , next) => {
         }
 
 
-        res.status(200).json({id : session.id , totalAmount : totalAmount / 100}) // to get the totalAmount in dollars format we divide it with 100 (convert from cents to dollar format)
+        res.status(200).json({sessionId : session.id , totalAmount : totalAmount / 100}) // to get the totalAmount in dollars format we divide it with 100 (convert from cents to dollar format)
 
 
     } catch (error) {
@@ -102,7 +103,7 @@ const checkOrderSuccess = async (req , res , next) => {
         if(session.payment_status === "paid"){
 
             if(session.metadata.couponCode){
-                await Coupon.findByIdAndUpdate({userId : session.metadata.userId , code : session.metadata.couponCode} , {isActive : false} , {new : true})
+                await Coupon.findOneAndUpdate({userId : session.metadata.userId , code : session.metadata.couponCode} , {isActive : false} , {new : true})
             }
 
             const products = JSON.parse(session.metadata.products)
@@ -135,7 +136,7 @@ const checkOrderSuccess = async (req , res , next) => {
     }
 
 }
-
+ 
 
 
 

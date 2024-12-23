@@ -1,30 +1,44 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useCartStore } from "../store/useCartStore";
+import toast from "react-hot-toast";
 
 
 
 const GiftCouponCard = () => {
 
-    const {coupon , isCouponApplied} = useCartStore()
+    const {coupon , isCouponApplied , getMyCoupon , applyCoupon , removeCoupon} = useCartStore()
 
     const [userInputCode , setUserInputCode] = useState("")
+
+	useEffect(() => {
+		getMyCoupon()
+	} , [getMyCoupon])
+
+
+	useEffect(() => {
+		if(coupon) setUserInputCode(coupon?.code)
+	} , [coupon])
+
 
 
     const handleApplyCoupon = async () => {
         try {
-            
+            if(!userInputCode) return toast.error("Please enter the discount code")
+			await applyCoupon(userInputCode)
         } catch (error) {
-            
+            toast.error(error.response.data.msg)
         }
     }
 
 
+
     const handleRemoveCoupon = async () => {
         try {
-            
+            await removeCoupon()
+			setUserInputCode("")
         } catch (error) {
-            
+			toast.error(error.response.data.msg)
         }
     }
 
@@ -79,10 +93,10 @@ const GiftCouponCard = () => {
 
 				<div className='mt-4'>
 
-					<h3 className='text-lg font-medium text-gray-300'>Applied Coupon</h3>
+					<h3 className='text-lg font-medium text-gray-300'>{isCouponApplied ? "Coupon Applied" : "Applied Coupon"}</h3>
 
 					<p className='mt-2 text-sm text-gray-400'>
-						{coupon.code} - {coupon.discountPercentage}% off
+						{coupon.code} - {coupon.discountPercentege}% off
 					</p>
 
 					<motion.button
@@ -107,7 +121,7 @@ const GiftCouponCard = () => {
 					<h3 className='text-lg font-medium text-gray-300'>Your Available Coupon:</h3>
 					
                     <p className='mt-2 text-sm text-gray-400'>
-						{coupon.code} - {coupon.discountPercentage}% off
+						{coupon?.code} - {coupon?.discountPercentege}% off
 					</p>
 
 				</div>

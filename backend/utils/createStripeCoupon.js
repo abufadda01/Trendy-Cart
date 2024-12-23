@@ -3,7 +3,7 @@ import { stripe } from "../db/stripe.js"
 
 export const createStripeCoupon = async (discountPercentage) => {
 
-    const coupon = stripe.coupons.create({
+    const coupon = await stripe.coupons.create({
         percent_off : discountPercentage ,
         duration : "once"
     })

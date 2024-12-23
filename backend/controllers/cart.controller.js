@@ -1,4 +1,5 @@
 import Product from "../models/Product.model.js"
+import User from "../models/User.model.js"
 import createError from "../utils/createError.js"
 
 
@@ -13,7 +14,7 @@ const getCartProducts = async (req , res , next) => {
         const cartItems = products.map((product) => {
             
             // get the product object from the user cartItems that matched any of the matched fetched products (to get the quantity key from each object in the user cartItems and add it to every product object)
-            const productInUserCart = req.user.cartItems.find(cartItem => cartItem._id === product._id) 
+            const productInUserCart = req.user.cartItems.find(cartItem => cartItem._id.toString() === product._id.toString()) 
             
             return {
                 ...product.toJSON() ,
@@ -73,7 +74,7 @@ const removeAllProductItems = async (req , res , next) => {
             user.cartItems = []
         }else{
             // remove the product from our cart with its all quantity
-            user.cartItems = user.cartItems.filter(cartItem => cartItem._id !== productId)
+            user.cartItems = user.cartItems.filter(cartItem => cartItem._id.toString() !== productId.toString())
         }
 
         await user.save()
@@ -97,7 +98,7 @@ const updateCartProductQuantity = async (req , res , next) => {
         const {newQuantity} = req.body
         const user = req.user
 
-        const isProductExistInCart = user.cartItems.find(cartItem => cartItem._id === productId)
+        const isProductExistInCart = user.cartItems.find(cartItem => cartItem._id.toString() === productId.toString())
 
         if(!isProductExistInCart){
             return next(createError("Product not exist" , 404))
@@ -106,7 +107,7 @@ const updateCartProductQuantity = async (req , res , next) => {
         if(isProductExistInCart){
 
             if(newQuantity === 0){ // if the new quantity value is zero thats mean we must remove this product from our cartItems
-                user.cartItems = user.cartItems.filter(cartItem => cartItem._id !== productId)
+                user.cartItems = user.cartItems.filter(cartItem => cartItem._id.toString() !== productId.toString())
                 await user.save()
                 return res.status(200).json(user.cartItems)
             }
@@ -126,8 +127,31 @@ const updateCartProductQuantity = async (req , res , next) => {
 
 
 
+const clearCart = async (req, res, next) => {
+    try {
 
-export {getCartProducts , addToCart , removeAllProductItems , updateCartProductQuantity}
+        const user = await User.findOneAndUpdate(
+            { _id: req.user._id },
+            { $set: { cartItems: [] } },
+            { new: true }
+        )
+
+        if (!user) {
+            return next(createError("User not found", 404));
+        }
+
+        res.status(200).json({ success: true, message: "Cart cleared" });
+        
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
+
+
+export {getCartProducts , addToCart , removeAllProductItems , updateCartProductQuantity , clearCart}
 
 
 
